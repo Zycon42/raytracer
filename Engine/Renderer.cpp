@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-#include "Drawable.h"
-
-Renderer::Renderer(std::shared_ptr<Scene> scene, std::shared_ptr<Drawable> canvas)
+Renderer::Renderer(std::shared_ptr<Scene> scene, std::shared_ptr<Canvas> canvas)
 	: scene(scene), canvas(canvas) {
 }
 

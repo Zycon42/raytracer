@@ -11,10 +11,10 @@ struct Color
 /**
  * Interface for drawable surface.
  */
-class Drawable
+class Canvas
 {
 public:
-	virtual ~Drawable() { }
+	virtual ~Canvas() { }
 
 	virtual size_t width() = 0;
 	virtual size_t height() = 0;

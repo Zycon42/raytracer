@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Primitive.h"
-#include "Drawable.h"
+#include "Canvas.h"
 
 class Scene;
 
 class Renderer
 {
 public:
-	Renderer(std::shared_ptr<Scene> scene, std::shared_ptr<Drawable> canvas);
+	Renderer(std::shared_ptr<Scene> scene, std::shared_ptr<Canvas> canvas);
 
-	void setCanvas(std::shared_ptr<Drawable> canvas) { this->canvas = canvas; }
+	void setCanvas(std::shared_ptr<Canvas> canvas) { this->canvas = canvas; }
 
 	void render();
 private:
@@ -18,5 +18,5 @@ private:
 	Color rayTrace(const Ray& ray, size_t depth = 0);
 
 	std::shared_ptr<Scene> scene;
-	std::shared_ptr<Drawable> canvas;
+	std::shared_ptr<Canvas> canvas;
 };

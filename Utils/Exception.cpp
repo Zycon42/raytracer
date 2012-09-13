@@ -57,7 +57,7 @@ void Exception::printStackTrace(std::ostream& stream /* = std::cerr */) {
 	}
 }
 
-Win32Exception::Win32Exception(DWORD errorCode, bool generateStackTrace /* = true */)
+Win32Exception::Win32Exception(uint32_t errorCode, bool generateStackTrace /* = true */)
 	: Exception(createMessage(std::string(), errorCode), generateStackTrace) { }
 
 Win32Exception::Win32Exception(bool generateStackTrace /* = true */)
@@ -66,11 +66,34 @@ Win32Exception::Win32Exception(bool generateStackTrace /* = true */)
 Win32Exception::Win32Exception(const std::string& msg, bool generateStackTrace /* = true */)
 	: Exception(createMessage(msg, GetLastError()), generateStackTrace) { }
 
-Win32Exception::Win32Exception(const std::string& msg, DWORD errorCode, bool generateStackTrace /* = true */)
+Win32Exception::Win32Exception(const std::string& msg, uint32_t errorCode, bool generateStackTrace /* = true */)
 	: Exception(createMessage(msg, errorCode), generateStackTrace) { }
 
-std::string Win32Exception::createMessage(const std::string& msg, DWORD errorCode) {
+std::string Win32Exception::createMessage(const std::string& msg, uint32_t errorCode) {
 	std::ostringstream s;
 	s << msg << " [" << errorCode << "] " << Win32Error(errorCode).message();
 	return s.str();
+}
+
+struct LocalFreeHelper
+{
+	void operator()(void* ptr) {
+		LocalFree(ptr);
+	}
+};
+
+std::string Win32Error::message() const {
+	// use unique_ptr to gain exception safety
+	std::unique_ptr<void, LocalFreeHelper> buff;
+	LPSTR buffPtr;
+	DWORD bufferLength = FormatMessageA(
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+		NULL,
+		ecode,
+		0,
+		reinterpret_cast<LPSTR>(&buffPtr),
+		0,
+		NULL);
+	buff.reset(buffPtr);
+	return std::string(buffPtr, bufferLength);
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #ifndef PRECOMPILED_HEADERS_INCLUDED
-#include <Windows.h>
 #include <vector>
 #include <cstdint>
 #endif // !PRECOMPILED_HEADERS_INCLUDED
@@ -15,6 +14,8 @@ struct SymbolInfo
 	std::string fileName;
 	unsigned long lineNumber;
 };
+
+typedef struct _CONTEXT CONTEXT;
 
 /**
  * Singleton class that wraps some useful DbgHelp calls.

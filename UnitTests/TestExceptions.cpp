@@ -24,7 +24,7 @@ TEST(ExceptionsTest, NoThrow) {
 TEST(ExceptionsTest, Win32) {
 	std::ostringstream s;
 	try {
-		throw Win32Exception("Sample Win32 Error", ERROR_FILE_NOT_FOUND, true);
+		throw Win32Exception("Sample Win32 Error", 2, true);
 	} catch (Exception& e) {
 		e.printStackTrace(s);
 	}

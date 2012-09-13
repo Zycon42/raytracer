@@ -36,40 +36,19 @@ class Win32Exception : public Exception
 public:
 	Win32Exception(bool generateStackTrace = true);
 	Win32Exception(const std::string& msg, bool generateStackTrace = true);
-	Win32Exception(const std::string& msg, DWORD errorCode, bool generateStackTrace = true);
-	Win32Exception(DWORD errorCode, bool generateStackTrace = true);
+	Win32Exception(const std::string& msg, uint32_t errorCode, bool generateStackTrace = true);
+	Win32Exception(uint32_t errorCode, bool generateStackTrace = true);
 private:
-	static std::string createMessage(const std::string& msg, DWORD errorCode);
+	static std::string createMessage(const std::string& msg, uint32_t errorCode);
 };
 
 class Win32Error
 {
 public:
-	Win32Error(DWORD code) : ecode(code) {}
-	DWORD code() const { return ecode; }
+	Win32Error(uint32_t code) : ecode(code) {}
+	uint32_t code() const { return ecode; }
 
-	std::string message() const {
-		// use unique_ptr to gain exception safety
-		std::unique_ptr<void, LocalFreeHelper> buff;
-		LPSTR buffPtr;
-		DWORD bufferLength = FormatMessageA(
-			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-			NULL,
-			ecode,
-			0,
-			reinterpret_cast<LPSTR>(&buffPtr),
-			0,
-			NULL);
-		buff.reset(buffPtr);
-		return std::string(buffPtr, bufferLength);
-	}
+	std::string message() const;
 private:
-	DWORD ecode;
-
-	struct LocalFreeHelper
-	{
-		void operator()(void* ptr) {
-			LocalFree(ptr);
-		}
-	};
+	uint32_t ecode;
 };

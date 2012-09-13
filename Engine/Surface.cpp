@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <functional>
+#include <map>
 
 Surface::Surface(size_t width, size_t height) : pixels(width * height), 
 	_height(height), _width(width) {

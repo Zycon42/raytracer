@@ -57,6 +57,11 @@ void Exception::printStackTrace(std::ostream& stream /* = std::cerr */) {
 	}
 }
 
+std::ostream& operator<<(std::ostream& out, Exception& e) {
+	e.printStackTrace(out);
+	return out;
+}
+
 Win32Exception::Win32Exception(uint32_t errorCode, bool generateStackTrace /* = true */)
 	: Exception(createMessage(std::string(), errorCode), generateStackTrace) { }
 

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Application.h"
 
+#include "Exception.h"
+
 #undef _WINGDI_			// workaround for bug in atlconv.h when we define NOGDI 
 #include <atlconv.h>
 
@@ -22,9 +24,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 					 LPSTR lpCmdLine, int nShowCmd)
 {
 	google::InitGoogleLogging(getArg0());
-	LOG(INFO) << "CommandLine: " << GetCommandLineA();
 
-	Application app(hInstance);
+	try {
+		Application app(hInstance);
 
-	return app.run();
+		return app.run();
+	} catch (Exception& e) {
+		LOG(FATAL) << "Unhandled Exception: " << e;
+		return 1;
+	}
 }

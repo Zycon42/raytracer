@@ -31,6 +31,8 @@ private:
 	std::vector<SymbolInfo> frameSymbols;
 };
 
+std::ostream& operator<<(std::ostream& out, Exception& e);
+
 class Win32Exception : public Exception
 {
 public:

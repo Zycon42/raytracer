@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "D3D.h"
 
 class Application
 {
@@ -15,7 +16,9 @@ private:
 	static LPCTSTR WND_TITLE;
 
 	void init(int width, int height);
+	void renderFrame();
 
 	HINSTANCE hInstance;
 	Window window;
+	D3D d3d;
 };

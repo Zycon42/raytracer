@@ -3,6 +3,8 @@
 
 #include "Exception.h"
 
+#pragma comment(lib, "D3D11")
+
 D3D::D3D() {
 }
 

@@ -21,7 +21,7 @@ int Application::run() {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
-
+			renderFrame();
 		}
 	}
 	return msg.wParam;
@@ -30,4 +30,12 @@ int Application::run() {
 void Application::init(int width, int height) {
 	window.setSize(width, height);
 	window.create(WND_TITLE);
+
+	d3d.initialize(window.handle(), width, height);
+}
+
+void Application::renderFrame() {
+	d3d.beginScene(Color::black());
+
+	d3d.endScene();
 }

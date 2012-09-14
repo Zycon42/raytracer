@@ -87,10 +87,10 @@ std::string Win32Error::message() const {
 	std::unique_ptr<void, LocalFreeHelper> buff;
 	LPSTR buffPtr;
 	DWORD bufferLength = FormatMessageA(
-		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
 		ecode,
-		0,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		reinterpret_cast<LPSTR>(&buffPtr),
 		0,
 		NULL);

@@ -13,14 +13,15 @@ int Application::run() {
 	init(640, 480);
 
 	MSG msg;
+	for (;;) {
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			if (msg.message == WM_QUIT)
+				break;
 
-	BOOL ret;
-	while ((ret = GetMessage(&msg, NULL, 0, 0)) != 0) {
-		if (ret == -1)
-			LOG(FATAL) << "GetMessage failed: " << Win32Error(GetLastError()).message();
-		else {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		} else {
+
 		}
 	}
 	return msg.wParam;

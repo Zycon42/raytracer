@@ -3,11 +3,11 @@
 #define PRECOMPILED_HEADERS_INCLUDED
 
 // windows
-
+#include <comdef.h>
 // without NOGDI there's name conflict with glog (windows define ERROR macro)
 #define NOGDI
 #include <Windows.h>
-//#include <d3d11.h>
+#include <d3d11.h>
 
 // 3rd party
 #pragma warning(push)

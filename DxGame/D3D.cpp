@@ -44,6 +44,15 @@ void D3D::initialize(HWND hWnd, size_t width, size_t height) {
 
 	// set render target
 	devContext->OMSetRenderTargets(1, &renderTargetView, nullptr);
+
+	// set viewport
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(viewport));
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = static_cast<float>(width);
+	viewport.Height = static_cast<float>(height);
+	devContext->RSSetViewports(1, &viewport);
 }
 
 void D3D::beginScene(const Color& bgColor) {

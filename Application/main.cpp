@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
 
 	try {
 		Application app;
-		app.init(640, 480, "Title");
 		app.run();
 	} catch (Exception& e) {
 		LOG(FATAL) << "Unhandled exception " << e;

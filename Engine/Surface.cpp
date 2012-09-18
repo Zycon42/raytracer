@@ -32,8 +32,8 @@ void Surface::storePixels(void* buffer, Format format /* = Format::RGB32 */) {
 	std::map<Format, std::function<void (const Color&, void*)>> map;
 	map[Format::RGB32] = [] (const Color& col, void* p) {
 		uint8_t* buff = (uint8_t*)p;
-		buff[0] = 0; buff[1] = round(col.r * UINT8_MAX);
-		buff[2] = round(col.g * UINT8_MAX); buff[3] = round(col.b * UINT8_MAX);
+		buff[3] = 0; buff[0] = round(col.r * UINT8_MAX);
+		buff[1] = round(col.g * UINT8_MAX); buff[2] = round(col.b * UINT8_MAX);
 	};
 	map[Format::RGB16] = [] (const Color& col, void* p) {
 		uint16_t* buff = (uint16_t*)p;

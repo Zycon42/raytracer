@@ -2,6 +2,7 @@
 #include "D3D.h"
 
 #include "Exception.h"
+#include "Shader.h"
 
 #pragma comment(lib, "D3D11")
 
@@ -25,8 +26,13 @@ void D3D::initialize(HWND hWnd, size_t width, size_t height) {
 	swdesc.SampleDesc.Count = 1;							// multi sampling, 1 means off
 	swdesc.Windowed = TRUE;									// windowed mode
 
+	DWORD flags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+	flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
 	// create device and swap chain
-	HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, 0, nullptr, 0,
+	HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, 0, flags, nullptr, 0,
 						D3D11_SDK_VERSION, &swdesc, &swChain, &dev, nullptr, &devContext);
 	if (FAILED(res))
 		throw Win32Exception(res, true);
@@ -62,4 +68,12 @@ void D3D::beginScene(const Color& bgColor) {
 
 void D3D::endScene() {
 	swChain->Present(0, 0);
+}
+
+std::shared_ptr<VertexShader> D3D::createVertexShader(const char* file) {
+	return std::make_shared<VertexShader>(this, file);
+}
+
+std::shared_ptr<PixelShader> D3D::createPixelShader(const char* file) {
+	return std::make_shared<PixelShader>(this, file);
 }

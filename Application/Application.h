@@ -1,10 +1,11 @@
 #pragma once
 
-class Window
+class Application
 {
 public:
-	Window(size_t width, size_t height, const char* caption);
+	Application();
 
+	void init(size_t width, size_t height, const char* caption);
 	void run();
 private:
 	void processEvents();

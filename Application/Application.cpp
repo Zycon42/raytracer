@@ -1,9 +1,17 @@
 #include "stdafx.h"
-#include "Window.h"
+#include "Application.h"
 
 #include "Exception.h"
 
-Window::Window(size_t width, size_t height, const char* caption) : done(false) {
+Application::Application() : screen(nullptr), done(false) {
+	GLenum err;
+	if ((err = glewInit()) != GLEW_OK)
+		throw Exception((const char*)glewGetErrorString(err));
+
+	LOG(INFO) << "Using GLEW " << glewGetString(GLEW_VERSION);
+}
+
+void Application::init(size_t width, size_t height, const char* caption) {
 	screen = SDL_SetVideoMode(width, height, 32, SDL_OPENGL);
 	if (!screen)
 		throw Exception(SDL_GetError());
@@ -11,13 +19,13 @@ Window::Window(size_t width, size_t height, const char* caption) : done(false) {
 	SDL_WM_SetCaption(caption, nullptr);
 }
 
-void Window::run() {
+void Application::run() {
 	while (!done) {
 		processEvents();
 	}
 }
 
-void Window::processEvents() {
+void Application::processEvents() {
 	SDL_Event event;  
 	while(SDL_PollEvent(&event)) {
 		switch (event.type)  

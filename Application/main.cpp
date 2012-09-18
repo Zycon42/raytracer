@@ -1,36 +1,20 @@
 #include "stdafx.h"
-#include "Application.h"
 
 #include "Exception.h"
+#include "Window.h"
 
-#undef _WINGDI_			// workaround for bug in atlconv.h when we define NOGDI 
-#include <atlconv.h>
+int main(int argc, char *argv[]) {
+	google::InitGoogleLogging(argv[0]);
 
-static const char* getArg0() {
-	int argc;
-	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-	USES_CONVERSION;
-	LPCSTR arg0 = W2A(argv[0]);
-	LocalFree(argv);
-	if (!arg0)
-		throw std::runtime_error("W2A failed");
-
-	static char ret[100];
-	strncpy_s(ret, arg0, 100);
-	return ret;
-}
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-					 LPSTR lpCmdLine, int nShowCmd)
-{
-	google::InitGoogleLogging(getArg0());
+	SDL_Init(SDL_INIT_VIDEO);  
+	atexit(SDL_Quit);
 
 	try {
-		Application app(hInstance);
-
-		return app.run();
+		Window wnd(640, 480, "Title");
+		wnd.run();
 	} catch (Exception& e) {
-		LOG(FATAL) << "Unhandled Exception: " << e;
-		return 1;
+		LOG(FATAL) << "Unhandled exception" << e;
 	}
+
+	return 0;
 }

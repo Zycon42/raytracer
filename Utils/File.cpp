@@ -39,7 +39,7 @@ void File::close() {
 
 void File::Impl::open(OpenMode mode) {
 	if (isOpened() || name.empty())
-		throw Exception(std::string("File is already opened or fileName not set."));
+		throw Exception("File is already opened or fileName not set.");
 
 	DWORD access = 0, shareMode = 0, creationDisposition = 0;
 	switch (mode)
@@ -63,11 +63,11 @@ std::string File::name() const {
 
 size_t File::size() const {
 	if (!impl->isOpened())
-		throw Exception(std::string("File is not opened."));
+		throw Exception("File is not opened.");
 
 	LARGE_INTEGER s;
 	if (!GetFileSizeEx(impl->handle, &s))
-		throw Win32Exception(std::string("GetFileSizeEx failed"));
+		throw Win32Exception("GetFileSizeEx failed");
 
 	return static_cast<size_t>(s.QuadPart);
 }
@@ -75,7 +75,7 @@ size_t File::size() const {
 size_t File::readData(void* buff, size_t size) {
 	DWORD nbytes;
 	if (!ReadFile(impl->handle, buff, size, &nbytes, nullptr))
-		throw Win32Exception(std::string("ReadFile failed"));
+		throw Win32Exception("ReadFile failed");
 
 	return nbytes;
 }

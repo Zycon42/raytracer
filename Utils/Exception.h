@@ -13,7 +13,7 @@ class Exception : public std::runtime_error
 {
 public:
 	Exception(bool generateStackTrace = true);
-	Exception(const std::string& msg, bool generateStackTrace = true);
+	Exception(const char* msg, bool generateStackTrace = true);
 
 	virtual ~Exception() throw();
 
@@ -37,8 +37,8 @@ class Win32Exception : public Exception
 {
 public:
 	Win32Exception(bool generateStackTrace = true);
-	Win32Exception(const std::string& msg, bool generateStackTrace = true);
-	Win32Exception(const std::string& msg, uint32_t errorCode, bool generateStackTrace = true);
+	Win32Exception(const char* msg, bool generateStackTrace = true);
+	Win32Exception(const char* msg, uint32_t errorCode, bool generateStackTrace = true);
 	Win32Exception(uint32_t errorCode, bool generateStackTrace = true);
 private:
 	static std::string createMessage(const std::string& msg, uint32_t errorCode);

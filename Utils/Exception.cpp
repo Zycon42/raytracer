@@ -11,7 +11,7 @@ Exception::Exception(bool generateStackTrace /* = true */) : std::runtime_error(
 		fillInStackTrace();
 }
 
-Exception::Exception(const std::string& msg, bool generateStackTrace /* = true */) : std::runtime_error(msg) {
+Exception::Exception(const char* msg, bool generateStackTrace /* = true */) : std::runtime_error(msg) {
 	if (generateStackTrace)
 		fillInStackTrace();
 }
@@ -63,16 +63,16 @@ std::ostream& operator<<(std::ostream& out, Exception& e) {
 }
 
 Win32Exception::Win32Exception(uint32_t errorCode, bool generateStackTrace /* = true */)
-	: Exception(createMessage(std::string(), errorCode), generateStackTrace) { }
+	: Exception(createMessage(std::string(), errorCode).c_str(), generateStackTrace) { }
 
 Win32Exception::Win32Exception(bool generateStackTrace /* = true */)
-	: Exception(createMessage(std::string(), GetLastError()), generateStackTrace) { }
+	: Exception(createMessage(std::string(), GetLastError()).c_str(), generateStackTrace) { }
 
-Win32Exception::Win32Exception(const std::string& msg, bool generateStackTrace /* = true */)
-	: Exception(createMessage(msg, GetLastError()), generateStackTrace) { }
+Win32Exception::Win32Exception(const char* msg, bool generateStackTrace /* = true */)
+	: Exception(createMessage(msg, GetLastError()).c_str(), generateStackTrace) { }
 
-Win32Exception::Win32Exception(const std::string& msg, uint32_t errorCode, bool generateStackTrace /* = true */)
-	: Exception(createMessage(msg, errorCode), generateStackTrace) { }
+Win32Exception::Win32Exception(const char* msg, uint32_t errorCode, bool generateStackTrace /* = true */)
+	: Exception(createMessage(msg, errorCode).c_str(), generateStackTrace) { }
 
 std::string Win32Exception::createMessage(const std::string& msg, uint32_t errorCode) {
 	std::ostringstream s;

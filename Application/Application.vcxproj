@@ -16,7 +16,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2EA884BD-3A26-49C2-B0DC-B63C950EF519}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DxGame</RootNamespace>
+    <RootNamespace>Application</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

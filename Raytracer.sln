@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DxGame", "DxGame\DxGame.vcxproj", "{2EA884BD-3A26-49C2-B0DC-B63C950EF519}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application\Application.vcxproj", "{2EA884BD-3A26-49C2-B0DC-B63C950EF519}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77079E10-B90D-4AF2-8222-7ECCB2B19C35} = {77079E10-B90D-4AF2-8222-7ECCB2B19C35}
 	EndProjectSection

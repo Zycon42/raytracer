@@ -93,6 +93,7 @@
     <ClInclude Include=".\ShaderProgram.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include=".\Application.h" />
+    <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -124,22 +125,22 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="shader.frag">
-      <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">xcopy /y "%(FullPath)" "$(SolutionDir)Build\$(Configuration)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">xcopy /y "%(FullPath)" "$(SolutionDir)Build\$(Configuration)"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Buid\$(Configuration)\%(Identity);%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\$(Configuration)\%(Identity);%(Outputs)</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Buid\$(Configuration)\%(Identity);%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\$(Configuration)\%(Identity);%(Outputs)</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
+      <FileType>Document</FileType>
     </CustomBuild>
     <CustomBuild Include="shader.vert">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">xcopy /y "%(FullPath)" "$(SolutionDir)Build\$(Configuration)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">xcopy /y "%(FullPath)" "$(SolutionDir)Build\$(Configuration)"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Buid\$(Configuration)\%(Identity);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Buid\$(Configuration)\%(Identity);%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Build\$(Configuration)\%(Identity);%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Build\$(Configuration)\%(Identity);%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

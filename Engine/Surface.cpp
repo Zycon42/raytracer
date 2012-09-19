@@ -16,12 +16,12 @@ Surface::~Surface()
 
 const Color& Surface::pixel(size_t x, size_t y) const {
 	assert(x < width() && y < height());
-	return pixels[x * width() + y];
+	return pixels[y * width() + x];
 }
 
 void Surface::setPixel(size_t x, size_t y, const Color& pixel) {
 	assert(x < width() && y < height());
-	pixels[x * width() + y] = pixel;
+	pixels[y * width() + x] = pixel;
 }
 
 static uint8_t round(float number) {

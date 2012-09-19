@@ -8,11 +8,18 @@
 
 #include "Buffer.h"
 #include "ShaderProgram.h"
+#include "Texture2D.h"
 
 const char* Application::WND_TITLE = "Raytracer";
 
+struct Vertex
+{
+	float pos[2];
+	float texCoords[2];
+};
+
 Application::Application() : screen(nullptr), done(false) {
-	createWindow(640, 480);
+	createWindow(800, 600);
 }
 
 Application::~Application() {
@@ -42,33 +49,55 @@ void Application::init() {
 	glBindVertexArray(vao);
 
 	// create vbo
-	float vertices[] = {
-		-1.0f,  1.0f,
-		-1.0f, -1.0f,
-		1.0f, -1.0f,
-		1.0f,  1.0f,
-		-1.0f, 1.0f,
-		1.0f, -1.0f
+	Vertex vertices[] = {
+		{{-1.0f,  1.0f}, {0.0f,  1.0f}},
+		{{-1.0f, -1.0f}, {0.0f, 0.0f}}, 
+		{{1.0f, -1.0f}, {1.0f, 0.0f}},
+		{{1.0f,  1.0f}, {1.0f,  1.0f}},
+		{{-1.0f, 1.0f}, {0.0f, 1.0f}},
+		{{1.0f, -1.0f}, {1.0f, 0.0f}}
 	};
 	vbo.reset(new Buffer());
 	vbo->loadData(vertices, sizeof(vertices));
 
 	// bind vbo to gpu
-	glEnableVertexAttribArray(0);
 	vbo->bind();
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	// tell gpu vertex declaration
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, pos)));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texCoords)));
 
+	// create shader program
 	shader.reset(new ShaderProgram("shader"));
-	shader->bindAttribLocation(0, "in_position");
+	shader->bindAttribLocation(0, "position");
+	shader->bindAttribLocation(1, "texcoord");
 	shader->link();
 	shader->use();
+	shader->setUniform("tex", 0);		// set first texture unit
 	LOG(INFO) << "Shaders compiled successfully.";
 
-	//auto surface = std::make_shared<Surface>(screen->h, screen->w);
-	//auto scene = std::make_shared<Scene>();
+	// create raytracer
+	auto surface = std::make_shared<Surface>(screen->h, screen->w);
+	auto scene = std::make_shared<Scene>();
+	Renderer renderer(scene, surface);
 
-	//Renderer renderer(scene, surface);
-	//renderer.render();					// TODO: run in another thread
+	// raytrace
+	renderer.render();					// TODO: run in another thread
+
+	// store raytracer output to temp buffer
+	std::unique_ptr<char[]> temp(new char[surface->width() * surface->height() * 4]);
+	surface->storePixels(temp.get());
+
+	// create texture from temp buffer
+	texture.reset(new Texture2D());
+	std::vector<Texture2D::Param> params;	// MSVC 2012 doesn't support C++11 initializer lists yet :(
+	params.push_back(Texture2D::Param(GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	texture->loadData(params, surface->width(), surface->height(), temp.get());
+
+	// bind texture to first texturing unit
+	glActiveTexture(GL_TEXTURE0);
+	texture->bind();
 }
 
 void Application::draw() {

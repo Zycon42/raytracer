@@ -15,7 +15,7 @@ public:
 
 	void render();
 private:
-	Ray spawnRay(size_t x, size_t y);
+	Ray spawnRay(float x, float y);
 	Color rayTrace(const Ray& ray, size_t depth = 0);
 	std::shared_ptr<Renderable> findNearestRenderable(const Ray& ray, float& distance);
 

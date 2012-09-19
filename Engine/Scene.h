@@ -9,7 +9,7 @@ public:
 	typedef std::vector<std::shared_ptr<Renderable>> RenderableList;
 	typedef std::vector<std::shared_ptr<Light>> LightList;
 
-	Scene() {}
+	Scene();
 
 	RenderableList& renderables() { return _renderables; }
 	LightList& lights() { return _lights; }

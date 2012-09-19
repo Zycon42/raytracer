@@ -2,6 +2,7 @@
 
 class Buffer;
 class ShaderProgram;
+class Texture2D;
 class Application
 {
 public:
@@ -25,5 +26,6 @@ private:
 
 	std::unique_ptr<Buffer> vbo;
 	std::unique_ptr<ShaderProgram> shader;
+	std::unique_ptr<Texture2D> texture;
 };
 

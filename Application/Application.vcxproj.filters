@@ -30,6 +30,9 @@
     <ClInclude Include=".\ShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,11 +49,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vert">
+    <CustomBuild Include="shader.vert">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shader.frag">
+    </CustomBuild>
+    <CustomBuild Include="shader.frag">
       <Filter>Resource Files</Filter>
-    </None>
+    </CustomBuild>
   </ItemGroup>
 </Project>

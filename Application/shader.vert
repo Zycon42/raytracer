@@ -1,7 +1,11 @@
 #version 130
 
-in vec2 in_position;
+in vec2 position;
+in vec2 texcoord;
+
+out vec2 f_texcoord;
 
 void main() {
-	gl_Position = vec4(in_position, 0.0, 1.0);
+	f_texcoord = texcoord;
+	gl_Position = vec4(position, 0.0, 1.0);
 }

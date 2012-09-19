@@ -58,20 +58,12 @@ void ShaderProgram::compileShader(GLuint shader, const std::string& fileName) {
 	}
 }
 
-void ShaderProgram::bindAttribLocation(GLuint index, const char* name) {
-	glBindAttribLocation(program, index, name);
-}
-
-void ShaderProgram::use() {
-	glUseProgram(program);
-}
-
 void ShaderProgram::link() {
 	glLinkProgram(program);
 
 	// test if link successful
 	int successful;
-	glGetProgramiv(program, GL_COMPILE_STATUS, &successful);
+	glGetProgramiv(program, GL_LINK_STATUS, &successful);
 	if (successful == GL_FALSE) {
 		int buffLen;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &buffLen);

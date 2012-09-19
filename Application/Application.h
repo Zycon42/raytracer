@@ -8,7 +8,7 @@ public:
 	Application();
 	~Application();
 
-	void run();
+	int run();
 private:
 	void createWindow(size_t width, size_t height);
 	void processEvents();

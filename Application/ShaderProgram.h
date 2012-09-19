@@ -9,7 +9,6 @@ public:
 	void bindAttribLocation(GLuint index, const char* name);
 	void use();
 	void link();
-	std::string infoLog() const { return log; }
 private:
 	ShaderProgram(const ShaderProgram&);
 	ShaderProgram& operator=(const ShaderProgram&);
@@ -19,5 +18,4 @@ private:
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	GLuint program;
-	std::string log;
 };

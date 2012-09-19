@@ -19,6 +19,7 @@ Application::~Application() {
 }
 
 void Application::createWindow(size_t width, size_t height) {
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	screen = SDL_SetVideoMode(width, height, 32, SDL_OPENGL);
 	if (!screen)
 		throw Exception(SDL_GetError());
@@ -35,8 +36,20 @@ void Application::createWindow(size_t width, size_t height) {
 void Application::init() {
 	glViewport(0, 0, screen->w, screen->h);
 
-	// create vertices buffer
-	float vertices[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f};
+	// create and bind vertex array object
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	// create vbo
+	float vertices[] = {
+		-1.0f,  1.0f,
+		-1.0f, -1.0f,
+		1.0f, -1.0f,
+		1.0f,  1.0f,
+		-1.0f, 1.0f,
+		1.0f, -1.0f
+	};
 	vbo.reset(new Buffer());
 	vbo->loadData(vertices, sizeof(vertices));
 
@@ -49,7 +62,7 @@ void Application::init() {
 	shader->bindAttribLocation(0, "in_position");
 	shader->link();
 	shader->use();
-	LOG(INFO) << "Shader BUILD LOG\n" << shader->infoLog();
+	LOG(INFO) << "Shaders compiled successfully.";
 
 	//auto surface = std::make_shared<Surface>(screen->h, screen->w);
 	//auto scene = std::make_shared<Scene>();
@@ -61,7 +74,7 @@ void Application::init() {
 void Application::draw() {
 	beginScene();
 
-	glDrawArrays(GL_QUADS, 0, 1);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	endScene();
 }
@@ -78,13 +91,19 @@ void Application::endScene() {
 	SDL_GL_SwapBuffers();
 }
 
-void Application::run() {
-	init();
-
-	while (!done) {
-		processEvents();
-		draw();
+int Application::run() {
+	try {
+		init();
+	
+		while (!done) {
+			processEvents();
+			draw();
+		}
+	} catch (Exception& e) {
+		LOG(ERROR) << e;
+		return 1;
 	}
+	return 0;
 }
 
 void Application::processEvents() {

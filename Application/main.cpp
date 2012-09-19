@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "Exception.h"
 #include "Application.h"
 
 int main(int argc, char *argv[]) {
@@ -11,10 +10,9 @@ int main(int argc, char *argv[]) {
 
 	try {
 		Application app;
-		app.run();
-	} catch (Exception& e) {
-		LOG(FATAL) << "Unhandled exception " << e;
+		return app.run();
+	} catch (std::exception& e) {
+		LOG(FATAL) << "Unhandled exception " << e.what();
+		return 1;
 	}
-
-	return 0;
 }

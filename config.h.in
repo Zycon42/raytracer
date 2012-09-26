@@ -1,0 +1,10 @@
+/**
+ * @file config.h
+ * 
+ * WARNING DO NOT EDIT!
+ * This file was generated from config.h.in by CMake.
+ */
+
+#pragma once
+
+const char* SHADERS_DIR = "../@DATA_DIR@/shaders/";

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 class Texture2D
 {
 public:
@@ -23,6 +25,14 @@ public:
 	}
 
 	void loadData(const std::vector<Param>& params, size_t width, size_t height, const void* data) {
+		bind();
+		for (auto param : params)
+			glTexParameteri(GL_TEXTURE_2D, param.name, param.value);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+
+	template <size_t N>
+	void loadData(const std::array<Param, N>& params, size_t width, size_t height, const void* data) {
 		bind();
 		for (auto param : params)
 			glTexParameteri(GL_TEXTURE_2D, param.name, param.value);

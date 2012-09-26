@@ -4,8 +4,8 @@
 #include "Scene.h"
 #include "Renderable.h"
 
-Renderer::Renderer(const std::shared_ptr<Scene>& scene, const std::shared_ptr<Canvas>& canvas)
-	: scene(scene), canvas(canvas) {
+Renderer::Renderer(const std::shared_ptr<Scene>& scene)
+	: scene(scene) {
 }
 
 Ray Renderer::spawnRay(float x, float y) {
@@ -16,7 +16,7 @@ Ray Renderer::spawnRay(float x, float y) {
 	return Ray(org, dir);
 }
 
-void Renderer::render() {
+void Renderer::render(const std::shared_ptr<Canvas>& canvas) {
 	float screenPlaneX = -4.0f, screenPlaneY = -3.0f;
 	float screenPlaneWidth = 8.0f, screenPlaneHeight = 6.0f;
 	float dx = screenPlaneWidth / canvas->width();

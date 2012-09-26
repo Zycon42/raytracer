@@ -10,6 +10,12 @@
 #include "ShaderProgram.h"
 #include "Texture2D.h"
 
+#ifdef _WIN32
+// without NOGDI there's name conflict with glog (windows define ERROR macro)
+#define NOGDI
+#include <Windows.h>
+#endif // _WIN32
+
 const char* Application::WND_TITLE = "Raytracer";
 
 struct Vertex
@@ -18,7 +24,7 @@ struct Vertex
 	float texCoords[2];
 };
 
-Application::Application() : screen(nullptr), done(false) {
+Application::Application() : screen(nullptr), done(false), rendererDone(false) {
 	createWindow(800, 600);
 }
 
@@ -76,28 +82,43 @@ void Application::init() {
 	shader->use();
 	shader->setUniform("tex", 0);		// set first texture unit
 	LOG(INFO) << "Shaders compiled successfully.";
+	
+	// raytrace in another thread
+	auto scene = std::make_shared<Scene>();		// create scene in this thread so exceptions will be delivered here.
+	surface = std::make_shared<Surface>(screen->h, screen->w);
+	std::thread thread([&] () { 
+		Renderer renderer(scene); 
+		renderer.render(surface);
+		rendererDone = true;
+	});
+	thread.detach();
+	LOG(INFO) << "Raytracing started in new thread [" << thread.get_id() << "].";
 
-	// create raytracer
-	auto surface = std::make_shared<Surface>(screen->h, screen->w);
-	auto scene = std::make_shared<Scene>();
-	Renderer renderer(scene, surface);
+	time = getTime();
+}
 
-	// raytrace
-	renderer.render();					// TODO: run in another thread
+void Application::update() {
+	// when renderer finished.
+	if (rendererDone) {
+		rendererDone = false;
 
-	// store raytracer output to temp buffer
-	std::unique_ptr<char[]> temp(new char[surface->width() * surface->height() * 4]);
-	surface->storePixels(temp.get());
+		LOG(INFO) << "Raytracing has ended in " << getTime() - time << " sec";
 
-	// create texture from temp buffer
-	texture.reset(new Texture2D());
-	std::vector<Texture2D::Param> params;	// MSVC 2012 doesn't support C++11 initializer lists yet :(
-	params.push_back(Texture2D::Param(GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	texture->loadData(params, surface->width(), surface->height(), temp.get());
+		// store raytracer output to temp buffer
+		std::unique_ptr<char[]> temp(new char[surface->width() * surface->height() * 4]);
+		surface->storePixels(temp.get());
 
-	// bind texture to first texturing unit
-	glActiveTexture(GL_TEXTURE0);
-	texture->bind();
+		// create texture from temp buffer
+		texture.reset(new Texture2D());
+		//std::vector<Texture2D::Param> params;	// MSVC 2012 doesn't support C++11 initializer lists yet :(
+		//params.push_back(Texture2D::Param(GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		std::array<Texture2D::Param, 1> params = { Texture2D::Param(GL_TEXTURE_MIN_FILTER, GL_LINEAR) };
+		texture->loadData(params, surface->width(), surface->height(), temp.get());
+
+		// bind texture to first texturing unit
+		glActiveTexture(GL_TEXTURE0);
+		texture->bind();
+	}
 }
 
 void Application::draw() {
@@ -126,6 +147,7 @@ int Application::run() {
 	
 		while (!done) {
 			processEvents();
+			update();
 			draw();
 		}
 	} catch (Exception& e) {
@@ -154,4 +176,28 @@ void Application::processEvents() {
 			break;  
 		}  
 	}
+}
+
+double Application::getTime() {
+#ifdef _WIN32
+	// windows version
+	static LARGE_INTEGER freq;
+	static bool first = true;
+	if (first) {
+		first = false;
+		if (!QueryPerformanceFrequency(&freq))
+			throw Win32Exception("QueryPerformanceFrequency failed!");
+	}
+
+	LARGE_INTEGER val;
+	QueryPerformanceCounter(&val);
+	return static_cast<double>(val.QuadPart) / static_cast<double>(freq.QuadPart);
+#else
+	// posix version
+	struct timeval tv;
+	if (gettimeofday(&tv, NULL) == -1)
+		throw SystemException("gettimeofday failed!");
+
+	return static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) / 1000000.0;
+#endif // _WIN32
 }

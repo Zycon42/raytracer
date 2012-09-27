@@ -113,7 +113,7 @@ public:
 			); 
 	}
 private:
-	union
+	union DataUnion
 	{
 		struct { T _x, _y, _z; };
 		struct { T _cells[3]; };

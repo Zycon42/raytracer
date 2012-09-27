@@ -16,29 +16,33 @@ class Vector3
 {
 public:
 	/// Zero-argument ctor.
-	Vector3() : _x(0.0), _y(0.0), _z(0.0) {}
+	Vector3() {
+		memset(&_u, 0, sizeof(_u));
+	}
 	/// Ctor from 3 values.
-	Vector3(T x, T y, T z) : _x(x), _y(y), _z(z) {}
+	Vector3(T x, T y, T z) {
+		_u._x = x; _u._y = y; _u._z = z;
+	}
 	/// Ctor from 3 values array.
-	explicit Vector3(T cells[3]) { std::copy(cells, cells + 3, this->_cells); }
+	explicit Vector3(T cells[3]) { std::copy(cells, cells + 3, this->_u._cells); }
 
 	/// Access x vector component.
-	T& x() { return _x; }
+	T& x() { return _u._x; }
 	/// Return x vector component.
-	T x() const { return _x; }
+	T x() const { return _u._x; }
 	/// Access y vector component.
-	T& y() { return _y; }
+	T& y() { return _u._y; }
 	/// Return y vector component.
-	T y() const { return _y; }
+	T y() const { return _u._y; }
 	/// Access z vector component.
-	T& z() { return _z; }
+	T& z() { return _u._z; }
 	/// Return z vector component.
-	T z() const { return _z; }
+	T z() const { return _u._z; }
 
 	/// Access vector as 3d array.
-	T& operator [](const int i) { assert(i < 3 && i >= 0); return _cells[i]; }
+	T& operator [](const int i) { assert(i < 3 && i >= 0); return _u._cells[i]; }
 	/// Return vector components via array indices.
-	T operator [](const int i) const { assert(i < 3 && i >= 0); return _cells[i]; }
+	T operator [](const int i) const { assert(i < 3 && i >= 0); return _u._cells[i]; }
 
 	bool operator ==(const Vector3& v) const { return x() == v.x() && y() == v.y() && z() == v.z(); }
 	bool operator !=(const Vector3& v) const { return !(*this == v); }
@@ -113,7 +117,7 @@ private:
 	{
 		struct { T _x, _y, _z; };
 		struct { T _cells[3]; };
-	};
+	} _u;
 };
 
 template<class T>

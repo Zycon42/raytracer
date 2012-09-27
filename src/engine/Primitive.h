@@ -20,12 +20,18 @@ private:
 class Sphere
 {
 public:
-	Sphere(const Vector3f& center, float radius) : center(center), radius(radius) {}
+	Sphere(const Vector3f& center, float radius) : _center(center), _radius(radius) {}
+
+	const Vector3f& center() const { return _center; }
+	Vector3f& center() { return _center; }
+
+	float radius() const { return _radius; }
+	void setRadius(float r) { _radius = r; }
 
 	bool intersects(const Ray& ray, float* dist) {
-		Vector3f v = ray.origin() - center;
+		Vector3f v = ray.origin() - center();
 		float b = -v.dot(ray.direction());
-		float det = (b * b) - v.dot(v) + (radius * radius);
+		float det = (b * b) - v.dot(v) + (radius() * radius());
 		if (det < 0)
 			return false;
 
@@ -48,6 +54,6 @@ public:
 		return retval;
 	}
 private:
-	Vector3f center;
-	float radius;
+	Vector3f _center;
+	float _radius;
 };

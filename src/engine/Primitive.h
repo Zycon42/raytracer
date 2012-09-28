@@ -61,7 +61,7 @@ private:
 class Plane
 {
 public:
-	Plane(const Vector3f& n, float d) : _normal(n), _d(d) { }
+	Plane(const Vector3f& n, float d) : _normal(n), _d(d) { _normal.normalize(); }
 
 	const Vector3f& normal() const { return _normal; }
 	Vector3f& normal() { return _normal; }
@@ -70,10 +70,13 @@ public:
 	void setD(float d) { _d = d; }
 
 	bool intersects(const Ray& ray, float* dist) {
-		float dot = normal().dot(ray.direction());
-		if (dot > 0) {
-			if (dist)
-				*dist = -(normal().dot(ray.origin()) + d()) / dot;
+		float dot = ray.direction().dot(normal());
+		if (dot != 0) {
+			if (dist) {
+				auto tmp = -(ray.origin().dot(normal()) + d()) / dot;
+				if (tmp > 0)
+					*dist = tmp;
+			}
 			return true;
 		}
 		return false;

@@ -36,7 +36,7 @@ void Renderer::render(const std::shared_ptr<Canvas>& canvas) {
 Color Renderer::rayTrace(const Ray& ray, size_t depth) {
 	auto color = Color::black();
 
-	float distance = std::numeric_limits<float>::min();
+	float distance = std::numeric_limits<float>::max();
 	auto renderable = findNearestRenderable(ray, distance);
 	if (!renderable)
 		return color;
@@ -65,10 +65,10 @@ Color Renderer::rayTrace(const Ray& ray, size_t depth) {
 std::shared_ptr<Renderable> Renderer::findNearestRenderable(const Ray& ray, float& distance) {
 	std::shared_ptr<Renderable> out;
 
-	for (auto renderable : scene->renderables()) {
+	for (auto& renderable : scene->renderables()) {
 		float newDist;
 		if (renderable->intersects(ray, &newDist)) {
-			if (distance < newDist) {
+			if (newDist < distance) {
 				distance = newDist;
 				out = renderable;
 			}

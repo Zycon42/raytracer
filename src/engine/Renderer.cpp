@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Renderable.h"
+#include "Light.h"
 
 Renderer::Renderer(const std::shared_ptr<Scene>& scene)
 	: scene(scene) {
@@ -40,8 +41,23 @@ Color Renderer::rayTrace(const Ray& ray, size_t depth) {
 	if (!renderable)
 		return color;
 
-	//Vector3f hitPt = ray.origin() + ray.direction() * distance;
-	color = renderable->material().ambient;
+	Vector3f hitPt = ray.origin() + ray.direction() * distance;
+	
+	Color lightsAmbient;
+	for (auto& light : scene->lights()) {
+		lightsAmbient += light->material().ambient;
+
+		// calculate dot product of surface normal and vector to light
+		Vector3f toLight = light->position() + hitPt;
+		toLight.normalize();
+		Vector3f norm = renderable->normal(hitPt);
+		norm.normalize();
+		float dot = toLight.dot(norm);
+
+		if (dot > 0)
+			color += dot * renderable->material().diffuse * light->material().diffuse;
+	}
+	color += renderable->material().ambient * lightsAmbient;
 
 	return color;
 }

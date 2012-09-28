@@ -57,3 +57,28 @@ private:
 	Vector3f _center;
 	float _radius;
 };
+
+class Plane
+{
+public:
+	Plane(const Vector3f& n, float d) : _normal(n), _d(d) { }
+
+	const Vector3f& normal() const { return _normal; }
+	Vector3f& normal() { return _normal; }
+
+	float d() const { return _d; }
+	void setD(float d) { _d = d; }
+
+	bool intersects(const Ray& ray, float* dist) {
+		float dot = normal().dot(ray.direction());
+		if (dot > 0) {
+			if (dist)
+				*dist = -(normal().dot(ray.origin()) + d()) / dot;
+			return true;
+		}
+		return false;
+	}
+private:
+	Vector3f _normal;
+	float _d;
+};

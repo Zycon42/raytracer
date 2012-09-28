@@ -2,15 +2,29 @@
 
 #include <cstddef>
 
-struct Color 
+#include "Vector3.h"
+
+class Color : public Vector3f
 {
-	Color() : r(0.0f), g(0.0f), b(0.0f) {}
-	Color(float r, float g, float b) : r(r), g(g), b(b) {}
+public:
+	Color() : Vector3f() { }
+	Color(float r, float g, float b) : Vector3f(r, g, b) { }
 
-	float r, g, b;
+	/// Access x vector component.
+	float& r() { return x(); }
+	/// Return x vector component.
+	float r() const { return x(); }
+	/// Access y vector component.
+	float& g() { return y(); }
+	/// Return y vector component.
+	float g() const { return y(); }
+	/// Access z vector component.
+	float& b() { return z(); }
+	/// Return z vector component.
+	float b() const { return z(); }
 
-	static Color white() { return Color(1.0f, 1.0f, 1.0f); }
 	static Color black() { return Color(0.0f, 0.0f, 0.0f); }
+	static Color white() { return Color(1.0f, 1.0f, 1.0f); }
 };
 
 /**
